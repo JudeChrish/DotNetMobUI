@@ -1,37 +1,51 @@
 import { Injectable } from '@angular/core';
-import { Http, Response, Headers, RequestOptions, RequestMethod } from '@angular/http';
-//import { Observable } from 'rxjs/observable';
+import { Observable } from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 import { Employee } from './employee.model';
+
+import 'rxjs/add/operator/map';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class EmployeeService {
-  selectedEmployee:Employee;
-  employeeList: Employee[];
-  constructor(private http:Http) { }
+  selectedEmployee: Employee;
+  employeeList: Observable<Employee[]>;
 
-  postEmployee(emp: Employee){
+  constructor(private httpC: HttpClient) { }
+
+  getEmployeeList(): Observable<any> {
+    return this.httpC.get('http://localhost:64756/api/Employee');
+  }
+
+  postEmployee(emp: Employee) {
+    debugger;
     var body = JSON.stringify(emp);
-    var headerOptions = new Headers({'Content-Type':'application/json'});
-    var requestOptions = new RequestOptions({ method: RequestMethod.Post,headers:headerOptions })
-    return this.http.post('http://localhost:28750/api/Employee',body,requestOptions).map(x=> x.json());
+
+    const httpOptions = {
+      headers: new HttpHeaders(
+        {
+          'Content-Type': 'application/json'
+        }
+      )
+    };
+
+    return this.httpC.post<Employee>('http://localhost:64756/api/Employee', body, httpOptions);
   }
 
-  putEmployee(id, emp){
-    var body = JSON.stringify(emp);
-    var headerOptions = new Headers({'Content-Type':'application/json'});
-    var requestOptions = new RequestOptions({method: RequestMethod.Put,headers:headerOptions})
-    return this.http.put('http://localhost:28750/api/Employee/'+id,body,requestOptions).map(x=>x.json());
-  }
+  // putEmployee(id: number, emp: Employee) {
+  //   var body = JSON.stringify(emp);
+  //   var headerOptions = new Headers({ 'Content-Type': 'application/json' });
+  //   var requestOptions = new RequestOptions({ method: RequestMethod.Put, headers: headerOptions })
+  //   return this.http.put('http://localhost:64756/api/Employee/' + id, body, requestOptions).map(x => x.json());
+  // }
 
-  getEmployeeList(){
-    this.http.get('http://localhost:28750/api/Employee/GetAll').map((data: Response) => { return data.json() as Employee[]; }).toPromise().then(x=> {this.employeeList = x})
-  }
+  // deleteEmployee(id: number) {
+  //   return this.http.delete('http://localhost:64756/api/Employee/' + id).map(res => res.json);
+  // }
 
-  deleteEmployee(id){
-    return this.http.delete('http://localhost:28750/api/Employee/'+ id).map(res => res.json);
-  }
+;
 }

@@ -1,3 +1,14 @@
-<p>
-  employee-list works!
-</p>
+<table class="table table-sm table-hover">
+  <div *ngIf="EmployeeList">
+  <tr *ngFor="let employee of EmployeeList" >
+    <td>{{employee.EmpFName}}-{{employee.EmpLName}}</td>
+    <td>{{employee.Department}}</td>
+    <td>
+      <a class="btn" (click)="showForEdit(employee)"><i class="fas fa-pencil-alt"></i></a>
+      <button class="btn btn-danger" (click)="onDelete(employee.empid)">
+          <i class="fas fa-trash-alt"></i>
+      </button>
+    </td>
+  </tr>
+</div>
+</table>
