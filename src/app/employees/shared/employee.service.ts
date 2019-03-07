@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Output, EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
@@ -14,6 +14,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 export class EmployeeService {
   selectedEmployee: Employee;
   employeeList: Observable<Employee[]>;
+  @Output() NewRecordAdded = new EventEmitter();
 
   constructor(private httpC: HttpClient) { }
 
@@ -22,7 +23,6 @@ export class EmployeeService {
   }
 
   postEmployee(emp: Employee) {
-    debugger;
     var body = JSON.stringify(emp);
 
     const httpOptions = {
@@ -32,8 +32,8 @@ export class EmployeeService {
         }
       )
     };
-
     return this.httpC.post<Employee>('http://localhost:64756/api/Employee', body, httpOptions);
+    
   }
 
   // putEmployee(id: number, emp: Employee) {

@@ -29,6 +29,22 @@ export class EmployeeListComponent implements OnInit {
       }
     );
 
+    this.employeeService.NewRecordAdded.subscribe(
+      (isUpdated: boolean) => {
+        if (isUpdated) {
+          this.employeeService.getEmployeeList().subscribe(res => {
+            console.log(res);
+            if (res != null)
+              this.EmployeeList = res;
+          },
+            error => {
+              console.log('Failed load details');
+            }
+          );
+        }
+      }
+    );
+
   }
 
   showForEdit(emp: Employee) {
@@ -43,4 +59,5 @@ export class EmployeeListComponent implements OnInit {
   //     })
   //   }
   // }
+
 }

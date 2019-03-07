@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { EmployeeService } from '../shared/employee.service';
 import { NgForm } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { error } from '@angular/compiler/src/util';
 
 @Component({
   selector: 'app-employee',
@@ -30,17 +31,17 @@ export class EmployeeComponent implements OnInit {
 
   onSubmit(form: NgForm)
   {
-    debugger;
     if(form.value.empId == null){
       this.employeeService.postEmployee(form.value).subscribe(data => {
         this.resetForm(form);
-       this.employeeService.getEmployeeList().subscribe(r => {
-         console.log(r);
-       }
-        
-        );
+        this.employeeService.NewRecordAdded.emit(true);
         this.toastr.success('New record added successfully','Employee Register');
        })
+       error =>{
+         console.log('erron on inserting new record');
+       }
+
+       
     }
     else {
       // this.employeeService.putEmployee(form.value.empId, form.value).subscribe(data =>{
